@@ -1,89 +1,110 @@
-AutoEncoder Anomaly Detection
-This repository contains an implementation of an AutoEncoder model for anomaly detection using TensorFlow and Keras. The code is designed to handle data preprocessing, model training, and anomaly detection. It includes classes for data encoding/decoding and the autoencoder model itself.
 
-Table of Contents
-Installation
-Usage
-Data Class
-AutoEncoder Class
-Example
-License
-Installation
-To get started, clone this repository and install the required dependencies.
+# AutoEncoder and Data Preprocessing
 
-bash
-Copy code
-git clone https://github.com/your-username/autoencoder-anomaly-detection.git
-cd autoencoder-anomaly-detection
-pip install -r requirements.txt
-The requirements.txt file should include the following dependencies:
+This repository contains two classes, `Data` and `AutoEncoder`, implemented using TensorFlow and Keras for data preprocessing and anomaly detection using an autoencoder neural network.
 
-Copy code
-pandas
-numpy
-tensorflow
-matplotlib
-Usage
-Data Class
-The Data class is used for data loading and encoding/decoding.
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Data Class](#data-class)
+  - [AutoEncoder Class](#autoencoder-class)
+- [Examples](#examples)
+  - [Data Class Example](#data-class-example)
+  - [AutoEncoder Class Example](#autoencoder-class-example)
+- [Dependencies](#dependencies)
+- [Contributing](#contributing)
+- [License](#license)
 
-Initialization
-python
-Copy code
-data = Data('path_to_csv_file.csv')
-Optionally, you can specify the encoding:
+## Installation
+1. Install the required dependencies:
+    ```bash
+    pip install tensorflow pandas numpy matplotlib
+    ```
 
-python
-Copy code
-data = Data('path_to_csv_file.csv', 'encoding')
-Methods
-columns(): Returns the columns of the dataframe.
-data_encode_dict(column_name, string): Creates dictionaries for encoding and decoding data.
-data_encoder(column_name, str_to_number, string): Encodes data based on the provided dictionaries.
-data_decoder(output_list, number_to_str): Decodes data based on the provided dictionaries.
-AutoEncoder Class
-The AutoEncoder class is used to define and train an autoencoder model, and to check for anomalies.
+## Usage
 
-Initialization
-python
-Copy code
+### Data Class
+
+The `Data` class is used for loading and encoding data from a CSV file.
+
+#### Initialization
+```python
+data = Data('path/to/your/csvfile.csv', 'encoding')  # Optional encoding
+```
+
+#### Methods
+
+- `columns()`
+  - Returns the columns of the dataframe.
+  
+- `data_encode_dict(column_name, string)`
+  - Returns a dictionary for encoding and decoding a specific column.
+  
+- `data_encoder(column_name, str_to_number, string)`
+  - Encodes the data in a column using the provided dictionary.
+  
+- `data_decoder(output_list, number_to_str)`
+  - Decodes the data using the provided dictionary.
+
+### AutoEncoder Class
+
+The `AutoEncoder` class is used to create, train, and validate an autoencoder neural network for anomaly detection.
+
+#### Initialization
+```python
 autoencoder = AutoEncoder(input_dims)
-Methods
-compilefit(X_train, epochs, batchsize): Compiles and fits the autoencoder model.
-validation(X_validation): Validates the model on a given dataset.
-easyAutoEncoder(*args): An easy setup method for the autoencoder.
-CheckAnomaly(check): Checks if the given data is an anomaly.
-Example
-python
-Copy code
-import tensorflow as tf
-import pandas as pd
-import numpy as np
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-import matplotlib.pyplot as plt
+```
 
-# Initialize the Data class
-data = Data('path_to_csv_file.csv')
+#### Methods
 
-# Print columns
+- `compilefit(X_train, epochs, batchsize)`
+  - Compiles and trains the autoencoder on the training data.
+  
+- `validation(X_validation)`
+  - Validates the autoencoder on the validation data.
+  
+- `easyAutoEncoder(csv_file, epochs, column_names)`
+  - A simplified method to encode data, train the autoencoder, and save the encoding dictionaries.
+  
+- `CheckAnomaly(values)`
+  - Checks if the provided values are anomalies based on the trained model.
+
+## Examples
+
+### Data Class Example
+```python
+data = Data('data.csv')
 print(data.columns())
 
-# Create encoding/decoding dictionaries
-encode_dict, decode_dict = data.data_encode_dict('column_name', True)
+string_to_number, number_to_string = data.data_encode_dict('column_name', True)
+encoded_data = data.data_encoder('column_name', string_to_number, True)
+decoded_data = data.data_decoder(encoded_data, number_to_string)
+```
 
-# Encode data
-encoded_data = data.data_encoder('column_name', encode_dict, True)
+### AutoEncoder Class Example
+```python
+autoencoder = AutoEncoder(input_dims=10)
+autoencoder.easyAutoEncoder('data.csv', 50, 'column1', 'column2', 'column3')
+anomaly = autoencoder.CheckAnomaly('value1', 'value2', 'value3')
+print("Is anomaly:", anomaly)
+```
 
-# Initialize AutoEncoder
-autoencoder = AutoEncoder(input_dims=len(data.columns()))
+## Dependencies
 
-# Train AutoEncoder
-autoencoder.easyAutoEncoder('path_to_csv_file.csv', 50, 'column1', 'column2', 'column3')
+- TensorFlow
+- Pandas
+- NumPy
+- Matplotlib
 
-# Check for anomalies
-anomalies = autoencoder.CheckAnomaly(np.array("element of column1" ,"element of column2","element of column3" )  # Example input
-print("Is anomaly:", anomalies)
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License.
+
+Feel free to reach out if you have any questions or need further assistance.
 
 
 
